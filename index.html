@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>PANEL V2</title>
+<style>
+/* PANEL V2 — giao diện thiết kế mới, độc lập với stylesheet cũ */
+:root{
+  color-scheme:dark;
+  --p-bg:#080a10;
+  --p-panel:#111621;
+  --p-panel2:#151d2b;
+  --p-line:#263247;
+  --p-text:#f3f6fb;
+  --p-muted:#91a0b6;
+  --p-dim:#62718a;
+  --p-red:#ff365d;
+  --p-red2:#d91e48;
+  --p-cyan:#36d9ff;
+  --p-green:#3de6a1;
+  --p-radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{min-height:100%;background:var(--p-bg);scroll-behavior:smooth}
+body{
+  min-height:100vh;overflow-x:hidden;
+  color:var(--p-text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(255,54,93,.13),transparent 34rem),
+    radial-gradient(ellipse at 100% 58%,rgba(54,217,255,.07),transparent 30rem),
+    var(--p-bg);
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.2;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+button,input,select{font:inherit}
+button{color:inherit;cursor:pointer}
+input,select{color:var(--p-text)}
+svg{display:block}
+img{max-width:100%}
+.glass,.card{
+  background:linear-gradient(145deg,rgba(21,29,43,.96),rgba(13,18,28,.96));
+  border:1px solid var(--p-line);border-radius:var(--p-radius);
+  box-shadow:0 14px 36px rgba(0,0,0,.24);
+}
+.screen{min-height:100svh;display:flex;align-items:center;justify-content:center;padding:22px}
+.login-card{
+  width:100%;max-width:390px;padding:32px 25px 26px;position:relative;overflow:hidden;
+  border-top:2px solid var(--p-red);
+}
+.login-card::before{
+  content:"";position:absolute;width:180px;height:180px;right:-95px;top:-100px;border-radius:50%;
+  background:rgba(255,54,93,.13);filter:blur(8px);pointer-events:none;
+}
+.login-card>*{position:relative}
+.logo-wrap{display:flex;justify-content:center;margin-bottom:20px}
+.logo{
+  width:86px;height:86px;object-fit:cover;border-radius:24px;
+  border:2px solid rgba(255,54,93,.7);
+  box-shadow:0 0 0 6px rgba(255,54,93,.08),0 0 34px rgba(255,54,93,.2);
+}
+.title{
+  text-align:center;font-size:27px;line-height:1.2;font-weight:900;letter-spacing:1.8px;
+  color:var(--p-text);margin-bottom:8px;
+}
+.subtitle{
+  text-align:center;color:var(--p-muted);font-size:10px;letter-spacing:2px;
+  font-weight:800;text-transform:uppercase;margin-bottom:28px;
+}
+.input-group{position:relative;margin-bottom:16px}
+.input-group label,.section-label{
+  display:block;color:var(--p-muted);font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.8px;margin:0 0 10px 2px;
+}
+.input-group .ico{position:absolute;left:14px;bottom:14px;width:17px;height:17px;color:var(--p-dim)}
+.input{
+  display:block;width:100%;padding:14px 14px 14px 42px;border-radius:13px;
+  border:1px solid #2b384d;background:#090e17;outline:none;
+  font:13px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.4px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.input::placeholder{color:#59677d}
+.input:focus{border-color:var(--p-red);box-shadow:0 0 0 3px rgba(255,54,93,.12)}
+.btn-primary,.btn-enter{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:15px 18px;border:0;border-radius:13px;
+  background:linear-gradient(110deg,var(--p-red),var(--p-red2));
+  color:white;font-weight:900;letter-spacing:1px;
+  box-shadow:0 8px 22px rgba(255,54,93,.2);overflow:hidden;
+  transition:transform .18s,filter .18s,box-shadow .18s;
+}
+.btn-primary svg,.btn-enter svg{width:17px;height:17px;flex-shrink:0}
+.btn-primary:active,.btn-enter:active{transform:scale(.985)}
+.btn-primary:hover,.btn-enter:hover{filter:brightness(1.08);box-shadow:0 10px 28px rgba(255,54,93,.3)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.login-msg{min-height:18px;margin-top:14px;text-align:center;font-size:12px;font-weight:700}
+.login-msg.error{color:#ff7088}.login-msg.success{color:var(--p-green)}.login-msg.info{color:var(--p-cyan)}
+.app{display:none;width:100%;max-width:480px;min-height:100vh;margin:0 auto;padding:14px 14px 104px}
+.app.active{display:block}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 14px;margin-bottom:12px;border-radius:16px;
+  border-top:2px solid var(--p-red);
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-logo{width:39px;height:39px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,54,93,.6)}
+.brand-text{font-size:16px;font-weight:900;letter-spacing:1px;white-space:nowrap}
+.brand-text .grad{color:var(--p-red);margin-left:4px}
+.ping-pill{
+  display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:10px;
+  border:1px solid var(--p-line);background:#0b111b;color:var(--p-muted);
+  font-size:11px;font-weight:800;white-space:nowrap;
+}
+.ping-dot,.live-dot{width:7px;height:7px;border-radius:50%;background:var(--p-green);box-shadow:0 0 10px rgba(61,230,161,.65)}
+.ping-dot.medium{background:#ffbf47;box-shadow:0 0 9px #ffbf47}.ping-dot.bad{background:var(--p-red);box-shadow:0 0 9px var(--p-red)}
+.top-info{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.info-pill{min-width:0;padding:11px 12px;border:1px solid var(--p-line);border-radius:13px;background:rgba(17,22,33,.88)}
+.info-pill .label{display:block;font-size:9px;color:var(--p-dim);font-weight:800;letter-spacing:1.4px;text-transform:uppercase;margin-bottom:3px}
+.info-pill .value{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 11px ui-monospace,SFMono-Regular,monospace;color:var(--p-text)}
+.info-pill .value.accent{color:var(--p-cyan)}
+.tabs{
+  position:fixed;z-index:100;left:50%;bottom:max(10px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);width:min(calc(100% - 24px),452px);
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px;
+  background:rgba(10,14,22,.96);border:1px solid #2a3548;border-radius:18px;
+  box-shadow:0 12px 38px rgba(0,0,0,.5);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.tab{
+  min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  padding:8px 3px;border:1px solid transparent;border-radius:12px;background:transparent;
+  color:var(--p-dim);font-size:10px;font-weight:800;transition:all .2s;
+}
+.tab svg{width:17px;height:17px}
+.tab.active{background:rgba(255,54,93,.12);border-color:rgba(255,54,93,.3);color:#ff6a86}
+.tab:hover:not(.active){color:var(--p-text);background:rgba(255,255,255,.035)}
+.panel{display:none}
+.panel.active{display:block;animation:panelIn .25s ease both}
+@keyframes panelIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.section-label{display:flex;align-items:center;gap:9px;margin:7px 2px 12px}
+.section-label::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,var(--p-line),transparent)}
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:17px}
+.game-card{
+  min-width:0;position:relative;overflow:hidden;text-align:center;padding:18px 10px 15px;
+  border:1px solid var(--p-line);border-radius:17px;background:linear-gradient(145deg,#151d2a,#0d131e);
+  cursor:pointer;transition:transform .2s,border-color .2s,background .2s;
+}
+.game-card::after{content:"";position:absolute;inset:auto 15% 0;height:2px;background:var(--p-red);opacity:0;transition:opacity .2s}
+.game-card:hover{transform:translateY(-2px);border-color:#47536a}
+.game-card.selected{border-color:var(--p-red);background:linear-gradient(145deg,rgba(255,54,93,.14),#101723);box-shadow:0 0 0 1px rgba(255,54,93,.12),0 10px 24px rgba(0,0,0,.18)}
+.game-card.selected::after{opacity:1}
+.game-icon{
+  width:46px;height:46px;display:flex;align-items:center;justify-content:center;margin:0 auto 11px;
+  border-radius:14px;background:rgba(255,54,93,.1);border:1px solid rgba(255,54,93,.25);color:#ff6a86;
+}
+.game-card.selected .game-icon{background:var(--p-red);color:white}
+.game-icon svg{width:22px;height:22px}
+.game-name{font-size:13px;font-weight:900;margin-bottom:4px}
+.game-pkg{font:9px ui-monospace,SFMono-Regular,monospace;color:var(--p-dim);overflow-wrap:anywhere}
+#featureMenu{display:none}
+.feature-list{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.feature-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px;border:1px solid var(--p-line);border-radius:14px;
+  background:linear-gradient(110deg,#121a27,#0d131d);transition:border-color .2s,background .2s;
+}
+.feature-row.on{border-color:rgba(54,217,255,.4);background:linear-gradient(110deg,rgba(54,217,255,.07),#0d131d)}
+.feature-info{flex:1;min-width:0}
+.feature-name{font-size:13px;font-weight:850;margin-bottom:3px}
+.feature-sub{font:10px ui-monospace,SFMono-Regular,monospace;color:var(--p-dim);letter-spacing:.5px}
+.feature-row.on .feature-name{color:var(--p-cyan)}
+.switch{position:relative;display:inline-block;width:47px;height:27px;flex-shrink:0;margin-left:8px}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;border-radius:20px;border:1px solid #344156;background:#202a39;cursor:pointer;transition:background .2s,border-color .2s}
+.slider::before{content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;background:#9ba8ba;transition:transform .2s,background .2s}
+.switch input:checked+.slider{background:rgba(54,217,255,.22);border-color:var(--p-cyan)}
+.switch input:checked+.slider::before{transform:translateX(20px);background:var(--p-cyan);box-shadow:0 0 12px rgba(54,217,255,.45)}
+.btn-enter{margin-top:5px;padding:16px;background:linear-gradient(110deg,#ff365d,#b9143b)}
+.profile-card{padding:18px}
+.profile-head{display:flex;align-items:center;gap:13px;padding-bottom:16px;border-bottom:1px solid var(--p-line)}
+.profile-logo{width:55px;height:55px;object-fit:cover;border-radius:16px;border:2px solid rgba(255,54,93,.55);flex-shrink:0}
+.profile-name{font-size:16px;font-weight:900;margin-bottom:4px}
+.profile-status{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:800;color:var(--p-green);text-transform:uppercase;letter-spacing:.7px}
+.countdown-big{text-align:center;margin:16px 0;padding:17px 10px;border:1px solid rgba(54,217,255,.18);border-radius:15px;background:linear-gradient(135deg,rgba(54,217,255,.07),rgba(255,54,93,.035))}
+.countdown-big .cd-label{font-size:10px;color:var(--p-muted);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.countdown-big .cd-value{font:800 25px ui-monospace,SFMono-Regular,monospace;color:var(--p-cyan);letter-spacing:.4px;overflow-wrap:anywhere}
+.countdown-big .cd-sub{font-size:10px;color:var(--p-dim);margin-top:5px}
+.countdown-big.critical .cd-value{color:#ff617e;animation:warningBlink 1.1s infinite}
+@keyframes warningBlink{50%{opacity:.55}}
+.info-list{display:flex;flex-direction:column}
+.info-item{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(145,160,182,.1)}
+.info-item:last-child{border-bottom:0}
+.info-item .lbl{flex-shrink:0;font-size:10px;color:var(--p-muted);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.info-item .val{max-width:62%;text-align:right;overflow-wrap:anywhere;font:600 11px ui-monospace,SFMono-Regular,monospace;color:var(--p-text)}
+.info-item .val.accent{color:var(--p-cyan)}.info-item .val.ok{color:var(--p-green)}.info-item .val.err{color:#ff617e}
+.activity-list{display:flex;flex-direction:column;gap:8px;max-height:62vh;overflow-y:auto;padding:1px}
+.act-item{display:flex;align-items:flex-start;gap:11px;padding:12px;border:1px solid var(--p-line);border-radius:13px;background:#111824}
+.act-ico{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:10px;background:rgba(54,217,255,.1);color:var(--p-cyan)}
+.act-ico.ok{background:rgba(61,230,161,.1);color:var(--p-green)}.act-ico.err{background:rgba(255,54,93,.1);color:#ff718a}
+.act-ico svg{width:15px;height:15px}.act-body{flex:1;min-width:0}
+.act-title{font-size:12px;font-weight:800;overflow-wrap:anywhere;margin-bottom:3px}
+.act-time{font:10px ui-monospace,SFMono-Regular,monospace;color:var(--p-dim)}
+.empty-act{text-align:center;padding:34px 16px;color:var(--p-dim);font-size:12px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;margin-bottom:9px;border:1px solid var(--p-line);border-radius:14px;background:linear-gradient(110deg,#131b28,#0e141f)}
+.setting-info{flex:1;min-width:0}
+.setting-title{font-size:13px;font-weight:850;margin-bottom:3px}
+.setting-desc{font-size:10px;line-height:1.5;color:var(--p-muted)}
+.btn-small{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:850;border:1px solid #344156;background:#1a2433;color:var(--p-text);transition:filter .2s,transform .2s}
+.btn-small svg{width:13px;height:13px}
+.btn-small:active{transform:scale(.97)}
+.btn-small.gold{background:rgba(54,217,255,.09);border-color:rgba(54,217,255,.28);color:var(--p-cyan)}
+.btn-small.danger{background:rgba(255,54,93,.1);border-color:rgba(255,54,93,.3);color:#ff718a}
+#toast{
+  position:fixed;z-index:9999;left:50%;bottom:90px;transform:translate(-50%,15px);
+  max-width:calc(100% - 28px);padding:12px 16px;border:1px solid #344156;border-radius:12px;
+  background:#141c29;color:var(--p-text);font-size:12px;font-weight:800;text-align:center;
+  box-shadow:0 12px 35px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.success{border-color:rgba(61,230,161,.45);color:var(--p-green)}
+#toast.error{border-color:rgba(255,54,93,.45);color:#ff718a}
+#toast.info{border-color:rgba(54,217,255,.4);color:var(--p-cyan)}
+.modal-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(3,6,11,.8);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{width:100%;max-width:380px;padding:22px;border:1px solid #354158;border-radius:18px;background:#121a27;box-shadow:0 24px 80px rgba(0,0,0,.55);transform:translateY(8px) scale(.98);transition:transform .2s}
+.modal-overlay.show .modal{transform:translateY(0) scale(1)}
+.modal h3{font-size:16px;font-weight:900;margin-bottom:8px}
+.modal-desc{font-size:12px;color:var(--p-muted);line-height:1.6;margin-bottom:17px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px}
+.modal-actions button{min-width:82px;padding:10px 13px;border:1px solid #344156;border-radius:10px;background:#202b3b;font-size:12px;font-weight:800}
+@media(min-width:600px){
+  .app{padding-top:22px}
+  .login-card{padding:36px 30px 30px}
+}
+@media(max-width:360px){
+  .app{padding-left:10px;padding-right:10px}
+  .topbar{padding:10px}
+  .brand-text{font-size:14px}
+  .ping-pill{padding:6px 7px;font-size:10px}
+  .game-card{padding:15px 7px 13px}
+  .game-name{font-size:12px}
+  .info-item .val{max-width:58%;font-size:10px}
+  .setting-row{padding:12px 10px}
+  .btn-small{padding:8px 9px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+
+/* ===== MOTION PACK / animated interface ===== */
+:root{--motion-glow:rgba(0,229,255,.28)}
+body:before{content:"";position:fixed;inset:-40%;pointer-events:none;z-index:-1;background:conic-gradient(from 0deg,transparent 0 22%,rgba(0,229,255,.055) 28%,transparent 34% 48%,rgba(255,40,90,.065) 55%,transparent 62% 100%);animation:bgOrbit 24s linear infinite}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+@keyframes bgOrbit{to{transform:rotate(360deg)}}
+@keyframes neonPulse{0%,100%{box-shadow:0 0 0 rgba(0,229,255,0),0 0 14px rgba(0,229,255,.08)}50%{box-shadow:0 0 22px rgba(0,229,255,.22),inset 0 0 16px rgba(0,229,255,.045)}}
+@keyframes redPulse{0%,100%{box-shadow:0 0 0 rgba(255,42,88,0)}50%{box-shadow:0 0 22px rgba(255,42,88,.28)}}
+@keyframes floatUp{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes slideIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes borderFlow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+.login-card,.profile-card,.card,.game-card,.info-pill,.setting-row{animation:neonPulse 5s ease-in-out infinite}
+.logo-wrap,.profile-logo{animation:floatUp 4s ease-in-out infinite}
+.btn-primary,.btn-enter{background-size:200% 100%;animation:shimmer 6s linear infinite}
+.game-card:hover,.feature-group:hover{transform:translateY(-3px);filter:brightness(1.08)}
+.panel.active{animation:slideIn .38s cubic-bezier(.2,.8,.2,1) both}
+.feature-groups{display:grid;gap:13px;margin-top:14px}
+.feature-group{position:relative;overflow:hidden;border:1px solid rgba(0,229,255,.22);border-radius:17px;background:linear-gradient(145deg,rgba(13,23,40,.94),rgba(8,13,25,.95));transition:transform .25s ease,filter .25s ease,border-color .25s ease;}
+.feature-group:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#00e5ff,#ff315d,#8a5cff);background-size:100% 200%;animation:borderFlow 4s linear infinite}
+.group-head{display:flex;align-items:center;justify-content:space-between;width:100%;padding:16px 15px;border:0;background:transparent;color:#f5f8ff;text-align:left;cursor:pointer;font:inherit}
+.group-head .group-left{display:flex;align-items:center;gap:11px}.group-symbol{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:rgba(0,229,255,.1);color:#00e5ff;font-size:17px;font-weight:900}.group-title{font-weight:850;letter-spacing:.08em;font-size:13px}.group-caption{font-size:10px;color:#7f94b1;margin-top:3px}.group-chevron{color:#00e5ff;font-size:20px;transition:transform .28s ease}.feature-group.open .group-chevron{transform:rotate(180deg)}
+.group-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease,opacity .25s ease;opacity:0}.feature-group.open .group-body{grid-template-rows:1fr;opacity:1}.group-inner{overflow:hidden;min-height:0;padding:0 12px}.feature-group.open .group-inner{padding-bottom:12px}
+.feature-row{animation:slideIn .3s both}.feature-row:nth-child(2){animation-delay:.035s}.feature-row:nth-child(3){animation-delay:.07s}.feature-row:nth-child(4){animation-delay:.105s}.feature-row:nth-child(5){animation-delay:.14s}.feature-row:nth-child(6){animation-delay:.175s}.feature-row:nth-child(7){animation-delay:.21s}.feature-row:nth-child(8){animation-delay:.245s}
+.feature-row .feature-name{letter-spacing:.035em}.feature-row.on{border-color:rgba(0,229,255,.4);background:linear-gradient(90deg,rgba(0,229,255,.1),rgba(255,49,93,.045))}
+.tier-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin:3px 0 14px;border:1px solid rgba(0,229,255,.28);border-radius:13px;background:linear-gradient(100deg,rgba(0,229,255,.09),rgba(255,49,93,.07));font-size:11px;font-weight:800;letter-spacing:.09em}
+.tier-banner.vip{border-color:rgba(255,190,60,.42);background:linear-gradient(100deg,rgba(255,190,60,.13),rgba(255,49,93,.08));color:#ffd47a}.tier-banner.normal{color:#8cefff}.tier-badge{padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.08);font-size:10px}
+.limit-note{font-size:10px;line-height:1.5;color:#8da3c1;padding:5px 4px 3px}.limit-note strong{color:#00e5ff}.feature-row.disabled-choice{opacity:.42;filter:grayscale(.5)}
+@media(prefers-reduced-motion:reduce){body:before,.login-card,.profile-card,.card,.game-card,.info-pill,.setting-row,.logo-wrap,.profile-logo,.btn-primary,.btn-enter{animation:none!important}}
+
+
+
+/* === FX PACK inspired by the supplied style.css: neon orbit, shimmer, scan and soft motion === */
+:root{--fx-cyan:#00e5ff;--fx-red:#ff3158;--fx-gold:#ffd166;--fx-glow:rgba(0,229,255,.22)}
+@keyframes fxGlowPulse{0%,100%{box-shadow:0 0 0 rgba(0,229,255,0),0 0 14px rgba(0,229,255,.10)}50%{box-shadow:0 0 26px rgba(0,229,255,.24),inset 0 0 16px rgba(0,229,255,.045)}}
+@keyframes fxRedPulse{0%,100%{text-shadow:0 0 4px rgba(255,49,88,.18)}50%{text-shadow:0 0 13px rgba(255,49,88,.7),0 0 25px rgba(255,49,88,.22)}}
+@keyframes fxShimmer{0%{transform:translateX(-150%) skewX(-18deg);opacity:0}15%{opacity:.5}55%{opacity:.16}100%{transform:translateX(250%) skewX(-18deg);opacity:0}}
+@keyframes fxOrbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fxFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes fxScan{0%{transform:translateY(-130%);opacity:0}15%{opacity:.35}85%{opacity:.18}100%{transform:translateY(230%);opacity:0}}
+@keyframes fxRipple{0%{transform:scale(.55);opacity:.55}100%{transform:scale(1.65);opacity:0}}
+@keyframes fxBlinkDot{0%,100%{opacity:.55;filter:brightness(1)}50%{opacity:1;filter:brightness(1.7)}}
+@keyframes fxSlideReveal{from{opacity:0;transform:translateY(9px) scale(.985);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes fxBorderTravel{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes fxTilt{0%,100%{transform:perspective(900px) rotateX(0) rotateY(0)}50%{transform:perspective(900px) rotateX(.7deg) rotateY(-.5deg)}}
+body:before{animation:bgOrbit 24s linear infinite,fxGlowPulse 8s ease-in-out infinite}
+.login-card,.profile-card,.card,.game-card,.setting-row,.info-pill,.feature-group{position:relative;isolation:isolate;overflow:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,border-color .28s ease;}
+.login-card:after,.profile-card:after,.card:after,.game-card:after,.feature-group:after,.setting-row:after{content:"";position:absolute;inset:0 auto 0 -35%;width:28%;pointer-events:none;z-index:0;background:linear-gradient(100deg,transparent,rgba(255,255,255,.10),rgba(0,229,255,.13),transparent);transform:translateX(-150%) skewX(-18deg);animation:fxShimmer 7s ease-in-out infinite;}
+.login-card:hover,.profile-card:hover,.card:hover,.game-card:hover,.feature-group:hover{transform:translateY(-3px);border-color:rgba(0,229,255,.38);box-shadow:0 12px 32px rgba(0,0,0,.22),0 0 22px rgba(0,229,255,.10)}
+.brand-logo,.logo,.profile-logo,.logo-wrap{animation:fxFloat 4.5s ease-in-out infinite,fxGlowPulse 3.8s ease-in-out infinite;}
+.title,.brand-text,.profile-name{animation:fxRedPulse 4s ease-in-out infinite;}
+.btn-primary,.btn-enter{position:relative;overflow:hidden;transition:transform .18s ease,filter .2s ease,box-shadow .2s ease;}
+.btn-primary:before,.btn-enter:before{content:"";position:absolute;inset:-30%;border:1px solid rgba(0,229,255,.4);border-radius:inherit;pointer-events:none;animation:fxRipple 2.8s ease-out infinite;}
+.btn-primary:after,.btn-enter:after{content:"";position:absolute;top:-60%;bottom:-60%;left:-80%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-20deg);animation:fxShimmer 3.8s ease-in-out infinite;pointer-events:none;}
+.btn-primary:active,.btn-enter:active{transform:scale(.975);filter:brightness(1.2)}
+.game-card{animation:fxSlideReveal .55s both,fxGlowPulse 6s ease-in-out infinite;}
+.game-card:nth-child(2){animation-delay:.08s,.3s}.game-card:nth-child(3){animation-delay:.16s,.6s}.game-card:nth-child(4){animation-delay:.24s,.9s}
+.feature-row{transition:background .22s ease,transform .22s ease,border-color .22s ease;animation:fxSlideReveal .38s both;}
+.feature-row:nth-child(2){animation-delay:.04s}.feature-row:nth-child(3){animation-delay:.08s}.feature-row:nth-child(4){animation-delay:.12s}.feature-row:nth-child(5){animation-delay:.16s}.feature-row:nth-child(6){animation-delay:.20s}.feature-row:nth-child(7){animation-delay:.24s}.feature-row:nth-child(8){animation-delay:.28s}
+.feature-row:hover{transform:translateX(3px);background:rgba(0,229,255,.055)}
+.switch{transition:background .25s ease,box-shadow .25s ease,transform .2s ease;}
+.switch:active{transform:scale(.94)}
+.switch.on,.switch.active{box-shadow:0 0 12px rgba(0,229,255,.32),0 0 24px rgba(0,229,255,.12)}
+.live-dot,.ping-dot,.tier-badge:before{animation:fxBlinkDot 1.6s ease-in-out infinite;}
+.tier-banner{background-size:200% 200%;animation:fxBorderTravel 5s linear infinite,fxGlowPulse 4s ease-in-out infinite;}
+.tier-badge{position:relative;overflow:hidden;}
+.tier-badge:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent,rgba(255,255,255,.28),transparent);transform:translateX(-130%);animation:fxShimmer 4s ease-in-out infinite;pointer-events:none;}
+.tabs.glass{backdrop-filter:blur(18px) saturate(1.35);-webkit-backdrop-filter:blur(18px) saturate(1.35);}
+.tab{transition:transform .2s ease,color .2s ease,background .2s ease;}
+.tab:active{transform:scale(.91)}.tab.active{animation:fxGlowPulse 3s ease-in-out infinite;}
+.modal-overlay{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:fadeIn .22s ease both;}
+.modal{animation:fxSlideReveal .35s cubic-bezier(.2,.8,.2,1) both;}
+.input:focus{box-shadow:0 0 0 3px rgba(0,229,255,.10),0 0 20px rgba(0,229,255,.10);transition:box-shadow .2s ease,border-color .2s ease;}
+.section-label{position:relative;}
+.section-label:after{content:"";display:block;width:44px;height:2px;margin-top:6px;border-radius:4px;background:linear-gradient(90deg,var(--fx-cyan),transparent);background-size:200% 100%;animation:fxBorderTravel 2.8s linear infinite;}
+.card:before,.feature-group:before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.5),rgba(255,49,88,.4),transparent);background-size:200% 100%;animation:fxBorderTravel 5s linear infinite;pointer-events:none;}
+/* Subtle scanning light, kept inside panels and not over text */
+.login-card .brand,.profile-card .profile-head{position:relative;}
+.login-card .brand:after{content:"";position:absolute;left:0;right:0;top:-20%;height:36%;background:linear-gradient(180deg,transparent,rgba(0,229,255,.08),transparent);animation:fxScan 6s linear infinite;pointer-events:none;}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen" class="screen">
+  <div class="login-card glass">
+    <div class="logo-wrap">
+      <img src="https://img0512.vercel.app" alt="HeadLock DD" class="logo" id="loginLogo">
+    </div>
+    <h1 class="title">PANEL V2</h1>
+    <div class="subtitle">Kích Hoạt Bản Quyền</div>
+
+    <div class="input-group">
+      <label>License Key</label>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <input type="text" id="keyInput" class="input" placeholder="HLDD-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+    </div>
+
+    <button id="activateBtn" class="btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+      <span>KÍCH HOẠT</span>
+    </button>
+
+    <div id="loginMsg" class="login-msg"></div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="mainApp" class="app">
+  <header class="topbar glass">
+    <div class="brand">
+      <img src="https://img0512.vercel.app" alt="logo" class="brand-logo" id="mainLogo">
+      <span class="brand-text">PANEL<span class="grad">V2</span></span>
+    </div>
+    <div class="ping-pill">
+      <span class="ping-dot" id="pingDot"></span>
+      <span id="pingText">--</span>
+    </div>
+  </header>
+
+  <div class="top-info">
+    <div class="info-pill">
+      <span class="label">Device ID</span>
+      <span class="value" id="devicePill">--</span>
+    </div>
+    <div class="info-pill">
+      <span class="label">Key</span>
+      <span class="value accent" id="keyPill">--</span>
+    </div>
+  </div>
+
+  <nav class="tabs glass">
+    <button class="tab active" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="tab" data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+    <button class="tab" data-tab="activity">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Activity
+    </button>
+    <button class="tab" data-tab="settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <!-- ===== HOME ===== -->
+  <section class="panel active" id="homePanel">
+    <div class="section-label">Chọn Game</div>
+    <div class="game-grid">
+      <div class="game-card" data-game="freefiremax">
+        <div class="game-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-3s1 1 1 3a3 3 0 0 0 6 0c0-3-3-4-3-10z"/></svg>
+        </div>
+        <div class="game-name">Free Fire Max</div>
+        <div class="game-pkg">com.dts.freefiremax</div>
+      </div>
+      <div class="game-card" data-game="freefire">
+        <div class="game-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+        </div>
+        <div class="game-name">Free Fire</div>
+        <div class="game-pkg">com.dts.freefire</div>
+      </div>
+    </div>
+
+    <div id="featureMenu">
+      <div class="tier-banner normal" id="tierBanner"><span id="tierTitle">LOẠI KEY: CHƯA XÁC ĐỊNH</span><span class="tier-badge" id="tierBadge">LOCKED</span></div>
+      <div class="section-label">Danh Sách Chức Năng</div>
+      <div id="featureGroups" class="feature-groups"></div>
+      <div class="limit-note" id="limitNote">Chức năng hiển thị theo loại key đang kích hoạt.</div>
+      <button id="enterGameBtn" class="btn-enter" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>VÀO GAME</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== PROFILE ===== -->
+  <section class="panel" id="profilePanel">
+    <div class="profile-card glass">
+      <div class="profile-head">
+        <img src="https://img0512.vercel.app" alt="logo" class="profile-logo" id="profileLogo">
+        <div>
+          <div class="profile-name">HeadLock DD</div>
+          <div class="profile-status"><span class="live-dot"></span> Đang hoạt động</div>
+        </div>
+      </div>
+
+      <div class="countdown-big" id="countdownBox">
+        <div class="cd-label">Thời Gian Còn Lại</div>
+        <div class="cd-value" id="countdownValue">--</div>
+        <div class="cd-sub" id="countdownSub">--</div>
+      </div>
+
+      <div class="info-list">
+        <div class="info-item"><span class="lbl">License Key</span><span class="val accent" id="pKey">--</span></div>
+        <div class="info-item"><span class="lbl">Device ID</span><span class="val" id="pDevice">--</span></div>
+        <div class="info-item"><span class="lbl">Fingerprint</span><span class="val" id="pFingerprint">--</span></div>
+        <div class="info-item"><span class="lbl">Kích hoạt</span><span class="val" id="pActivated">--</span></div>
+        <div class="info-item"><span class="lbl">Hạn dùng</span><span class="val" id="pExpires">--</span></div>
+        <div class="info-item"><span class="lbl">Trạng thái</span><span class="val ok" id="pStatus">--</span></div>
+        <div class="info-item"><span class="lbl">Ping</span><span class="val" id="pPing">--</span></div>
+        <div class="info-item"><span class="lbl">Server</span><span class="val" id="pServer">--</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ACTIVITY ===== -->
+  <section class="panel" id="activityPanel">
+    <div class="card glass" style="padding:20px;">
+      <div class="section-label">Lịch Sử Hoạt Động</div>
+      <div class="activity-list" id="activityList"></div>
+    </div>
+  </section>
+
+  <!-- ===== SETTINGS ===== -->
+  <section class="panel" id="settingsPanel">
+    <div class="section-label">Cài Đặt</div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-title">Xoá Cache</div>
+        <div class="setting-desc">Làm mới dữ liệu, không mất phiên</div>
+      </div>
+      <button class="btn-small gold" id="clearCacheBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
+        Làm mới
+      </button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-title">Kiểm Tra Kết Nối</div>
+        <div class="setting-desc">Đo lại ping tới server</div>
+      </div>
+      <button class="btn-small gold" id="testPingBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Test
+      </button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-title">Đăng Xuất</div>
+        <div class="setting-desc">Khoá key sẽ vẫn giữ trên thiết bị</div>
+      </div>
+      <button class="btn-small danger" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Thoát
+      </button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-title">Xoá Toàn Bộ Dữ Liệu</div>
+        <div class="setting-desc">Reset về ban đầu, sẽ mất phiên đăng nhập</div>
+      </div>
+      <button class="btn-small danger" id="resetAllBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+        Xoá hết
+      </button>
+    </div>
+
+    <div class="section-label" style="margin-top:20px;">Thông Tin</div>
+    <div class="setting-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+      <div class="setting-title" style="margin:0;">HeadLock DD</div>
+      <div class="setting-desc">Phiên bản 3.0 · Bản quyền thuộc về HeadLock DD</div>
+      <div class="setting-desc" style="margin-top:4px;">Hỗ trợ: <span style="color:var(--gold-3);">t.me/headlockdd</span></div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div id="modal" class="modal-overlay">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-actions">
+      <button id="modalCancel" class="btn-small gold">Huỷ</button>
+      <button id="modalOk" class="btn-small gold" style="background:rgba(201,169,97,.2);">OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG — hex-encoded
+   ============================================================ */
+const _D = s => { let r=''; for(let i=0;i<s.length;i+=2) r+=String.fromCharCode(parseInt(s.slice(i,i+2),16)); return r; };
+const _cfg = {
+  b: _D('366139616162663066356634616635653239363961663363'),
+  k: _D('24326124313024374277564d6a41617774316d4f6b4e597954556e774f47496c535738364242745343674c7a6b516d49796e3970536454657531724f')
+};
+const API_BASE = 'https://api.jsonbin.io/v3/b/' + _cfg.b;
+const HEADERS = { 'X-Master-Key': _cfg.k, 'Content-Type': 'application/json' };
+
+const DUR_MS = { '1h': 3600000, '1day': 86400000, '7day': 604800000, '30day': 2592000000, 'forever': null };
+const SESSION_KEY = 'hldd_session_v4';
+const DEVICE_KEY = 'hldd_device_id';
+const LOG_KEY = 'hldd_log_v1';
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  key: null,
+  deviceId: null,
+  fingerprint: null,
+  activatedAt: null,
+  expiresAt: null,
+  duration: null,
+  keyTier: 'normal',
+  selectedGame: null,
+  features: {},
+  serverOnline: null,
+  lastPing: null
+};
+
+let countdownTimer = null;
+let pingTimer = null;
+let sessionCheckTimer = null;
+let sessionCheckBusy = false;
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+const $ = id => document.getElementById(id);
+const fmtDate = ts => {
+  if (!ts) return 'Vĩnh viễn';
+  const d = new Date(ts);
+  return d.toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+};
+const maskId = u => !u ? '--' : (u.length <= 18 ? u : u.slice(0,10) + '...' + u.slice(-6));
+
+function toast(msg, type='info'){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.className = ''; }, 2600);
+}
+
+function setMsg(text, type=''){
+  const el = $('loginMsg');
+  el.textContent = text;
+  el.className = 'login-msg ' + type;
+}
+
+/* ============================================================
+   DEVICE FINGERPRINT — sinh mã thiết bị ổn định
+   ============================================================ */
+function computeFingerprint(){
+  const data = [
+    navigator.userAgent,
+    navigator.language,
+    navigator.platform || '',
+    screen.width + 'x' + screen.height + 'x' + (screen.colorDepth || 24),
+    new Date().getTimezoneOffset(),
+    navigator.hardwareConcurrency || 0,
+    navigator.deviceMemory || 0,
+    navigator.maxTouchPoints || 0
+  ].join('|');
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < data.length; i++){
+    const c = data.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 2654435761);
+    h2 = Math.imul(h2 ^ c, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return ((h2 >>> 0).toString(36) + (h1 >>> 0).toString(36)).toUpperCase().padEnd(12, '0').slice(0, 12);
+}
+
+function getOrCreateDeviceId(){
+  const fp = computeFingerprint();
+  let id = null;
+  try { id = localStorage.getItem(DEVICE_KEY); } catch {}
+  if (!id){
+    const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+    id = 'DD-' + fp.slice(0, 6) + '-' + rand;
+    try { localStorage.setItem(DEVICE_KEY, id); } catch {}
+  }
+  return { id, fingerprint: fp };
+}
+
+/* ============================================================
+   ACTIVITY LOG
+   ============================================================ */
+function loadLog(){
+  try { return JSON.parse(localStorage.getItem(LOG_KEY) || '[]'); } catch { return []; }
+}
+function saveLog(arr){
+  try { localStorage.setItem(LOG_KEY, JSON.stringify(arr.slice(0, 80))); } catch {}
+}
+function addLog(title, kind='ok'){
+  const arr = loadLog();
+  arr.unshift({ title, kind, ts: Date.now() });
+  saveLog(arr);
+  renderLog();
+}
+function renderLog(){
+  const list = loadLog();
+  const el = $('activityList');
+  if (!el) return;
+  if (!list.length){
+    el.innerHTML = '<div class="empty-act">Chưa có hoạt động nào</div>';
+    return;
+  }
+  const icons = {
+    ok:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    err:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+  };
+  const iconClass = { ok:'ok', err:'err', info:'' };
+  el.innerHTML = list.map(l => `
+    <div class="act-item">
+      <div class="act-ico ${iconClass[l.kind]||''}">${icons[l.kind]||icons.info}</div>
+      <div class="act-body">
+        <div class="act-title">${escHTML(l.title)}</div>
+        <div class="act-time">${fmtDate(l.ts)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function escHTML(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ============================================================
+   API
+   ============================================================ */
+async function fetchKeys(){
+  const res = await fetch(API_BASE + '/latest', { headers: HEADERS, cache: 'no-store' });
+  if (!res.ok) throw new Error('Server ' + res.status);
+  const data = await res.json();
+  const record = data.record || {};
+  return Array.isArray(record.keys) ? record.keys : [];
+}
+async function putKeys(keys){
+  const res = await fetch(API_BASE, {
+    method: 'PUT', headers: HEADERS, body: JSON.stringify({ keys })
+  });
+  if (!res.ok) throw new Error('PUT ' + res.status);
+}
+async function pingServer(){
+  const t0 = performance.now();
+  try {
+    const res = await fetch(API_BASE + '/latest', { headers: HEADERS, cache: 'no-store' });
+    if (!res.ok) throw new Error();
+    return { ms: Math.round(performance.now() - t0), online: true };
+  } catch {
+    return { ms: null, online: false };
+  }
+}
+
+/* ============================================================
+   KEY TIERS + FEATURE MENUS
+   ============================================================ */
+const FEATURE_CONFIG = {
+  normal: {
+    title: 'KEY THƯỜNG', badge: 'STANDARD',
+    groups: [
+      {id:'optimize', title:'TỐI ƯU', symbol:'✦', caption:'Các mục tối ưu thiết bị', items:[['fps144','BUFF 144 FPS'],['fixlag','FIX LAG'],['recoil','GIẢM GIẬT TÂM'],['touch','TỐI ƯU CẢM ỨNG']]},
+      {id:'aim', title:'AIM', symbol:'◎', caption:'Chỉ bật được 1 trong 3', limit:1, items:[['nhetam','NHẸ TÂM'],['aimv1','AIM V1'],['aimlockv1','AIMLOCK V1']]}
+    ]
+  },
+  vip: {
+    title: 'KEY VIP', badge: 'VIP ACCESS',
+    groups: [
+      {id:'optimize', title:'TỐI ƯU', symbol:'✦', caption:'Bộ tối ưu nâng cao', items:[['fps144','BUFF 144 FPS'],['fixlag','FIX LAG'],['recoil','GIẢM GIẬT TÂM'],['screenresponse','TĂNG PHẢN HỒI MÀN HÌNH'],['sensitivity','TĂNG NHẠY MÀN'],['touch','TỐI ƯU CẢM ỨNG']]},
+      {id:'aim', title:'AIM', symbol:'◎', caption:'Tối đa 3 mục; bắt buộc chọn 2/3 mục hỗ trợ', limit:3, items:[['nhetam','NHẸ TÂM'],['aimv2','AIM V2'],['aimlockv2','AIMLOCK V2'],['aimco','AIM CỔ'],['aimbuoi','AIM BUÔI'],['bam_dau','BÁM ĐẦU'],['fix_rung','FIX RUNG'],['fix_lo','FIX LỐ']]}
+    ]
+  }
+};
+const AIM_SUPPORT = ['bam_dau','fix_rung','fix_lo'];
+function inferKeyTier(kObj){
+  const raw = [kObj?.tier,kObj?.type,kObj?.keyType,kObj?.plan,kObj?.level,kObj?.name,kObj?.key].filter(Boolean).join(' ').toLowerCase();
+  return (kObj?.vip === true || kObj?.isVip === true || /vip|premium|pro/.test(raw)) ? 'vip' : 'normal';
+}
+function renderFeatureGroups(){
+  const tier = FEATURE_CONFIG[state.keyTier] || FEATURE_CONFIG.normal;
+  $('tierTitle').textContent = 'LOẠI KEY: ' + tier.title;
+  $('tierBadge').textContent = tier.badge;
+  $('tierBanner').className = 'tier-banner ' + (state.keyTier === 'vip' ? 'vip' : 'normal');
+  $('featureGroups').innerHTML = tier.groups.map(group => `
+    <article class="feature-group" data-group="${group.id}">
+      <button class="group-head" type="button" aria-expanded="false">
+        <span class="group-left"><span class="group-symbol">${group.symbol}</span><span><span class="group-title">${group.title}</span><span class="group-caption" style="display:block">${group.caption}</span></span></span>
+        <span class="group-chevron">⌄</span>
+      </button>
+      <div class="group-body"><div class="group-inner">
+        <div class="feature-list">${group.items.map(([id,label])=>`
+          <div class="feature-row" data-feat="${id}"><div class="feature-info"><div class="feature-name">${label}</div><div class="feature-sub">${group.id === 'aim' ? 'AIM MODULE' : 'OPTIMIZATION'}</div></div><label class="switch"><input type="checkbox" data-feat-input="${id}"><span class="slider"></span></label></div>
+        `).join('')}</div>
+        ${group.id === 'aim' ? `<div class="limit-note">${state.keyTier === 'vip' ? 'VIP: tối đa 3/8 mục AIM và cần bật ít nhất 2 mục trong BÁM ĐẦU / FIX RUNG / FIX LỐ.' : 'Key thường: chỉ bật 1/3 mục AIM.'}</div>` : ''}
+      </div></div>
+    </article>`).join('');
+  document.querySelectorAll('.group-head').forEach(btn => btn.addEventListener('click', () => {
+    const card = btn.closest('.feature-group');
+    card.classList.toggle('open');
+    btn.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
+  }));
+  document.querySelectorAll('[data-feat-input]').forEach(inp => inp.addEventListener('change', () => onFeatureChange(inp.dataset.featInput, inp.checked)));
+  applyFeatureState();
+}
+function applyFeatureState(){
+  document.querySelectorAll('[data-feat-input]').forEach(inp => {
+    inp.checked = !!state.features[inp.dataset.featInput];
+    const row = inp.closest('.feature-row');
+    if (row) row.classList.toggle('on', inp.checked);
+  });
+  updateEnterButton();
+}
+function activeAimFeatures(){
+  const all = Object.keys(state.features).filter(k => state.features[k]);
+  const aimIds = (FEATURE_CONFIG[state.keyTier] || FEATURE_CONFIG.normal).groups.find(g=>g.id==='aim').items.map(x=>x[0]);
+  return all.filter(k=>aimIds.includes(k));
+}
+function onFeatureChange(feat, checked){
+  const tier = FEATURE_CONFIG[state.keyTier] || FEATURE_CONFIG.normal;
+  const aimGroup = tier.groups.find(g=>g.id==='aim');
+  const isAim = aimGroup.items.some(x=>x[0]===feat);
+  const was = !!state.features[feat];
+  if (isAim){
+    const chosen = activeAimFeatures().filter(x => x !== feat);
+    if (checked) chosen.push(feat);
+    if (chosen.length > aimGroup.limit){
+      toast(state.keyTier === 'vip' ? 'Key VIP chỉ bật tối đa 3 mục AIM' : 'Key thường chỉ bật 1 mục AIM', 'error');
+      const input = document.querySelector(`[data-feat-input="${feat}"]`); if(input) input.checked=was;
+      return;
+    }
+    if (state.keyTier === 'vip' && chosen.length === 3 && chosen.filter(x=>AIM_SUPPORT.includes(x)).length < 2){
+      toast('Khi bật 3 mục AIM, cần có ít nhất 2 mục: BÁM ĐẦU, FIX RUNG, FIX LỐ', 'error');
+      const input = document.querySelector(`[data-feat-input="${feat}"]`); if(input) input.checked=was;
+      return;
+    }
+  }
+  state.features[feat] = checked;
+  const row = document.querySelector(`.feature-row[data-feat="${feat}"]`);
+  if (row) row.classList.toggle('on', checked);
+  updateEnterButton();
+}
+
+/* ============================================================
+   ACTIVATE — auto device lock
+   ============================================================ */
+async function activate(){
+  const key = $('keyInput').value.trim();
+  setMsg('');
+  if (!key){ setMsg('Vui lòng nhập License Key', 'error'); return; }
+
+  const btn = $('activateBtn');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = 'ĐANG XÁC THỰC...';
+
+  try {
+    // 1. Sinh device ID & fingerprint
+    const dev = getOrCreateDeviceId();
+    state.deviceId = dev.id;
+    state.fingerprint = dev.fingerprint;
+
+    // 2. Fetch keys
+    const keys = await fetchKeys();
+    const kObj = keys.find(k => k.key && k.key.toLowerCase() === key.toLowerCase());
+
+    if (!kObj) throw new Error('Key không tồn tại hoặc không hợp lệ');
+    if (isKeyDisabled(kObj)) throw new Error('Key đã bị khoá hoặc vô hiệu hoá');
+    if (kObj.expiresAt && kObj.expiresAt <= Date.now()) throw new Error('Key đã hết hạn sử dụng');
+    const maxDevices = Number(kObj.maxDevices ?? kObj.deviceLimit ?? kObj.maxDevice ?? 1);
+    const deviceList = Array.isArray(kObj.devices) ? kObj.devices : (Array.isArray(kObj.activeDevices) ? kObj.activeDevices : []);
+    if (deviceList.length >= maxDevices && !deviceList.some(d => (typeof d === 'string' ? d : (d.deviceUDID || d.id || '')).toLowerCase() === dev.id.toLowerCase())) throw new Error('Key đã đạt giới hạn thiết bị đăng nhập');
+
+    // 3. Kiểm tra khoá thiết bị
+    let needsUpdate = false;
+    const storedFp = (kObj.deviceFingerprint || '').toLowerCase();
+    const myFp = dev.fingerprint.toLowerCase();
+    const storedDev = (kObj.deviceUDID || '').toLowerCase();
+    const myDev = dev.id.toLowerCase();
+
+    if (kObj.deviceUDID) {
+      // Đã khoá vào thiết bị khác?
+      if (storedDev !== myDev) {
+        // Thử recover bằng fingerprint (trường hợp clear localStorage)
+        if (storedFp && storedFp === myFp) {
+          // Cùng thiết bị, chỉ đổi localStorage → cập nhật device ID mới
+          kObj.deviceUDID = dev.id;
+          kObj.deviceFingerprint = dev.fingerprint;
+          needsUpdate = true;
+          addLog('Khôi phục device ID bằng fingerprint: ' + dev.id, 'info');
+        } else {
+          throw new Error('Key đã được khoá trên thiết bị khác');
+        }
+      }
+    } else {
+      // Chưa khoá → khoá vào thiết bị này
+      kObj.deviceUDID = dev.id;
+      kObj.deviceFingerprint = dev.fingerprint;
+      kObj.activatedAt = Date.now();
+      const dur = DUR_MS[kObj.duration];
+      kObj.expiresAt = dur ? kObj.activatedAt + dur : null;
+      needsUpdate = true;
+      addLog('Khoá key vào thiết bị: ' + dev.id, 'ok');
+    }
+
+    if (needsUpdate) await putKeys(keys);
+
+    // 4. Lưu session
+    state.key = kObj.key;
+    state.activatedAt = kObj.activatedAt;
+    state.expiresAt = kObj.expiresAt;
+    state.duration = kObj.duration;
+    state.keyTier = inferKeyTier(kObj);
+    state.features = {};
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      key: state.key,
+      deviceId: state.deviceId,
+      fingerprint: state.fingerprint,
+      activatedAt: state.activatedAt,
+      expiresAt: state.expiresAt,
+      duration: state.duration,
+      keyTier: state.keyTier
+    }));
+
+    addLog('Kích hoạt thành công key ' + state.key, 'ok');
+    setMsg('Kích hoạt thành công!', 'success');
+    setTimeout(() => enterApp(), 600);
+  } catch(e){
+    setMsg(e.message || 'Kích hoạt thất bại', 'error');
+    addLog('Kích hoạt thất bại: ' + (e.message || ''), 'err');
+  } finally {
+    btn.disabled = false;
+    btn.querySelector('span').textContent = 'KÍCH HOẠT';
+  }
+}
+
+/* ============================================================
+   APP ENTRY / EXIT
+   ============================================================ */
+function enterApp(){
+  $('loginScreen').style.display = 'none';
+  $('mainApp').classList.add('active');
+
+  $('devicePill').textContent = maskId(state.deviceId);
+  $('devicePill').title = state.deviceId;
+  $('keyPill').textContent = state.key;
+  renderFeatureGroups();
+
+  renderProfile();
+  renderLog();
+  startCountdown();
+  startPingMonitor();
+  startSessionMonitor();
+  toast('Chào mừng đến HeadLock DD', 'success');
+}
+
+function logout(){
+  localStorage.removeItem(SESSION_KEY);
+  state.key = null;
+  clearInterval(countdownTimer);
+  clearInterval(pingTimer);
+  clearInterval(sessionCheckTimer);
+  sessionCheckTimer = null;
+  $('mainApp').classList.remove('active');
+  $('loginScreen').style.display = 'flex';
+  $('keyInput').value = '';
+  setMsg('');
+  addLog('Đăng xuất khỏi phiên', 'info');
+}
+
+function resetAll(){
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(DEVICE_KEY);
+  localStorage.removeItem(LOG_KEY);
+  location.reload();
+}
+
+/* ============================================================
+   RESTORE
+   ============================================================ */
+async function tryRestore(){
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch {}
+  if (!saved || !saved.key || !saved.deviceId) return;
+
+  Object.assign(state, saved);
+  state.keyTier = saved.keyTier || 'normal';
+  if (state.expiresAt && state.expiresAt <= Date.now()){
+    localStorage.removeItem(SESSION_KEY);
+    state.key = null;
+    return;
+  }
+
+  // Verify key status before showing the app
+  try {
+    const keys = await fetchKeys();
+    const kObj = keys.find(k => k.key && k.key.toLowerCase() === state.key.toLowerCase());
+    if (!kObj || isKeyDisabled(kObj) || (kObj.deviceUDID || '').toLowerCase() !== state.deviceId.toLowerCase() || (kObj.expiresAt && kObj.expiresAt <= Date.now())){
+      localStorage.removeItem(SESSION_KEY);
+      state.key = null;
+      $('loginScreen').style.display = 'flex';
+      $('mainApp').classList.remove('active');
+      setMsg(!kObj ? 'Key đã bị xoá hoặc không tồn tại' : (kObj.expiresAt && kObj.expiresAt <= Date.now() ? 'Key đã hết hạn' : 'Key bị khoá hoặc phiên không còn hợp lệ'), 'error');
+      return;
+    }
+    state.activatedAt = kObj.activatedAt;
+    state.expiresAt = kObj.expiresAt;
+    state.duration = kObj.duration;
+    state.keyTier = inferKeyTier(kObj);
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      key: state.key, deviceId: state.deviceId, fingerprint: state.fingerprint,
+      activatedAt: state.activatedAt, expiresAt: state.expiresAt, duration: state.duration, keyTier: state.keyTier
+    }));
+    enterApp();
+    renderProfile();
+  } catch (e){
+    state.serverOnline = false;
+    // Không xoá phiên chỉ vì mạng chập chờn; monitor sẽ kiểm tra lại mỗi giây.
+    enterApp();
+  }
+}
+
+/* ============================================================
+   SESSION VALIDATION — check every 1 second
+   ============================================================ */
+function isKeyDisabled(k){
+  if (!k) return true;
+  const status = String(k.status || '').toLowerCase();
+  return k.locked === true || k.isLocked === true || k.disabled === true || k.deleted === true ||
+    ['locked','disabled','deleted','blocked','revoked','banned'].includes(status);
+}
+function forceLogout(reason){
+  localStorage.removeItem(SESSION_KEY);
+  clearInterval(countdownTimer); clearInterval(pingTimer); clearInterval(sessionCheckTimer);
+  sessionCheckTimer = null; state.key = null;
+  $('mainApp').classList.remove('active'); $('loginScreen').style.display = 'flex';
+  $('keyInput').value = ''; setMsg(reason || 'Key không còn hợp lệ', 'error');
+  addLog(reason || 'Key không còn hợp lệ', 'err');
+}
+function startSessionMonitor(){
+  clearInterval(sessionCheckTimer);
+  async function verify(){
+    if (sessionCheckBusy || !state.key) return;
+    if (state.expiresAt && state.expiresAt <= Date.now()) { forceLogout('Key đã hết hạn. Không thể tiếp tục sử dụng.'); return; }
+    sessionCheckBusy = true;
+    try {
+      const keys = await fetchKeys();
+      const kObj = keys.find(k => k.key && k.key.toLowerCase() === state.key.toLowerCase());
+      if (!kObj) { forceLogout('Key đã bị xoá khỏi hệ thống.'); return; }
+      if (isKeyDisabled(kObj)) { forceLogout('Key đã bị khoá/vô hiệu hoá.'); return; }
+      if (kObj.expiresAt && Number(kObj.expiresAt) <= Date.now()) { forceLogout('Key đã hết hạn. Không thể tiếp tục sử dụng.'); return; }
+      const myDevice = String(state.deviceId || '').toLowerCase();
+      const assigned = String(kObj.deviceUDID || '').toLowerCase();
+      if (assigned && assigned !== myDevice) { forceLogout('Key không còn được cấp cho thiết bị này.'); return; }
+      const maxDevices = Number(kObj.maxDevices ?? kObj.deviceLimit ?? kObj.maxDevice ?? 1);
+      const devices = Array.isArray(kObj.devices) ? kObj.devices : (Array.isArray(kObj.activeDevices) ? kObj.activeDevices : []);
+      if (devices.length > maxDevices || (devices.length >= maxDevices && !devices.some(d => (typeof d === 'string' ? d : (d.deviceUDID || d.id || '')).toLowerCase() === myDevice))) {
+        forceLogout('Key đã đạt giới hạn thiết bị đăng nhập.'); return;
+      }
+      state.expiresAt = kObj.expiresAt || null;
+      state.activatedAt = kObj.activatedAt || state.activatedAt;
+      state.duration = kObj.duration || state.duration;
+      state.keyTier = inferKeyTier(kObj);
+      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || '{}');
+      localStorage.setItem(SESSION_KEY, JSON.stringify({...saved, key:state.key, deviceId:state.deviceId, fingerprint:state.fingerprint, activatedAt:state.activatedAt, expiresAt:state.expiresAt, duration:state.duration, keyTier:state.keyTier}));
+      if ($('tierTitle') && !document.querySelector('.feature-group')) renderFeatureGroups();
+    } catch (e) {
+      // Server/network error is not proof that the key was revoked; retry in one second.
+      state.serverOnline = false;
+    } finally { sessionCheckBusy = false; }
+  }
+  verify();
+  sessionCheckTimer = setInterval(verify, 1000);
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function renderProfile(){
+  $('pKey').textContent = state.key || '--';
+  $('pDevice').textContent = state.deviceId || '--';
+  $('pFingerprint').textContent = state.fingerprint || '--';
+  $('pActivated').textContent = fmtDate(state.activatedAt);
+  $('pExpires').textContent = state.expiresAt ? fmtDate(state.expiresAt) : 'Vĩnh viễn';
+  $('pStatus').textContent = 'Đã kích hoạt';
+  $('pStatus').className = 'val ok';
+  if (state.lastPing !== null) $('pPing').textContent = state.lastPing + ' ms';
+  $('pServer').textContent = state.serverOnline === false ? 'Offline' : (state.serverOnline ? 'Online' : '--');
+  $('pServer').className = 'val ' + (state.serverOnline === false ? 'err' : 'ok');
+}
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
+function startCountdown(){
+  clearInterval(countdownTimer);
+  const box = $('countdownBox');
+  const valEl = $('countdownValue');
+  const subEl = $('countdownSub');
+
+  function tick(){
+    if (!state.activatedAt){ valEl.textContent = '--'; subEl.textContent = 'Chưa kích hoạt'; return; }
+    const rem = state.expiresAt ? state.expiresAt - Date.now() : null;
+    if (rem === null){
+      valEl.textContent = '∞'; subEl.textContent = 'Vĩnh viễn';
+      box.classList.remove('critical');
+      return;
+    }
+    if (rem <= 0){
+      valEl.textContent = '00:00:00'; subEl.textContent = 'Đã hết hạn';
+      box.classList.add('critical');
+      clearInterval(countdownTimer);
+      addLog('Key đã hết hạn', 'err');
+      localStorage.removeItem(SESSION_KEY);
+      toast('Key đã hết hạn. Đang đăng xuất...', 'error');
+      setTimeout(() => forceLogout('Key đã hết hạn sử dụng'), 250);
+      return;
+    }
+    const s = Math.floor(rem/1000);
+    const d = Math.floor(s/86400);
+    const h = Math.floor((s%86400)/3600);
+    const m = Math.floor((s%3600)/60);
+    const sec = s%60;
+    const pad = n => String(n).padStart(2,'0');
+    if (d > 0){
+      valEl.textContent = `${d}d ${pad(h)}:${pad(m)}:${pad(sec)}`;
+      subEl.textContent = `${d} ngày ${h} giờ còn lại`;
+    } else {
+      valEl.textContent = `${pad(h)}:${pad(m)}:${pad(sec)}`;
+      subEl.textContent = 'Giờ : Phút : Giây';
+    }
+    box.classList.toggle('critical', rem < 3600000);
+  }
+  tick();
+  countdownTimer = setInterval(tick, 1000);
+}
+
+/* ============================================================
+   PING
+   ============================================================ */
+function startPingMonitor(){
+  clearInterval(pingTimer);
+  const dot = $('pingDot');
+  const txt = $('pingText');
+
+  async function tick(){
+    const r = await pingServer();
+    state.serverOnline = r.online;
+    state.lastPing = r.ms;
+
+    if (!r.online){
+      dot.className = 'ping-dot bad';
+      txt.textContent = 'Offline';
+      $('pPing').textContent = '--';
+      $('pServer').textContent = 'Offline';
+      $('pServer').className = 'val err';
+      return;
+    }
+    txt.textContent = r.ms + ' ms';
+    $('pPing').textContent = r.ms + ' ms';
+    $('pServer').textContent = 'Online';
+    $('pServer').className = 'val ok';
+    dot.className = 'ping-dot' + (r.ms < 300 ? '' : r.ms < 800 ? ' medium' : ' bad');
+  }
+  tick();
+  pingTimer = setInterval(tick, 15000);
+}
+
+/* ============================================================
+   GAME + FEATURES
+   ============================================================ */
+function selectGame(game){
+  state.selectedGame = game;
+  document.querySelectorAll('.game-card').forEach(c => c.classList.toggle('selected', c.dataset.game === game));
+  $('featureMenu').style.display = 'block';
+  updateEnterButton();
+}
+function updateEnterButton(){
+  const anyOn = Object.values(state.features).some(Boolean);
+  $('enterGameBtn').style.display = (anyOn && state.selectedGame) ? 'flex' : 'none';
+}
+
+/* ============================================================
+   LAUNCH GAME — deep link
+   ============================================================ */
+function enterGame(){
+  if (!state.selectedGame){ toast('Chưa chọn game', 'error'); return; }
+  const labels = Object.fromEntries(Object.values(FEATURE_CONFIG).flatMap(t=>t.groups.flatMap(g=>g.items)).map(([id,label])=>[id,label]));
+  const feats = Object.keys(state.features).filter(k=>state.features[k]).map(k=>labels[k] || k);
+  if (!feats.length){ toast('Bật ít nhất một chức năng', 'error'); return; }
+
+  const gameName = state.selectedGame === 'freefiremax' ? 'Free Fire Max' : 'Free Fire';
+  const pkg = state.selectedGame === 'freefiremax' ? 'com.dts.freefiremax' : 'com.dts.freefire';
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  addLog(`Vào ${gameName} · ${feats.join(' + ')}`, 'ok');
+
+  if (isIOS || isAndroid){
+    // Thử mở app bằng scheme
+    const scheme = state.selectedGame === 'freefiremax' ? 'freefiremax://' : 'freefire://';
+    const url = isAndroid
+      ? `intent://launch/#Intent;scheme=${pkg.split('.').pop()};package=${pkg};end`
+      : scheme;
+
+    toast(`Đang mở ${gameName}...`, 'success');
+
+    // Đánh dấu thời điểm rời trang
+    let hidden = false;
+    const onVis = () => { if (document.hidden) hidden = true; };
+    document.addEventListener('visibilitychange', onVis);
+
+    // Cố mở app
+    try {
+      if (isAndroid) window.location.href = url;
+      else window.location.href = scheme;
+    } catch {}
+
+    // Sau 2 giây: nếu không rời trang → app không có sẵn
+    setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVis);
+      if (!hidden && !document.hidden){
+        showModal({
+          title: 'Không tìm thấy ' + gameName,
+          desc: `Thiết bị chưa cài ${gameName} (${pkg}). Vui lòng cài từ App Store / CH Play rồi thử lại.`,
+          okText: 'Đã hiểu'
+        });
+        addLog(`Không tìm thấy ${gameName} trên thiết bị`, 'err');
+      }
+    }, 2000);
+  } else {
+    // Desktop → hướng dẫn
+    showModal({
+      title: 'Cần mở trên thiết bị di động',
+      desc: `Vui lòng mở web này trên iPhone hoặc Android có cài ${gameName} (${pkg}) để vào game. Mã chức năng đã được lưu.`,
+      okText: 'Copy package',
+      onOk: () => {
+        copyText(pkg, 'Đã copy package ' + pkg);
+      }
+    });
+  }
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+function showModal({ title, desc, okText = 'OK', onOk }){
+  const m = $('modal');
+  $('modalTitle').textContent = title;
+  $('modalDesc').textContent = desc || '';
+  m.classList.add('show');
+  const ok = $('modalOk');
+  const cancel = $('modalCancel');
+  ok.textContent = okText;
+  const close = () => {
+    m.classList.remove('show');
+    ok.onclick = null; cancel.onclick = null;
+  };
+  ok.onclick = () => { if (onOk) onOk(); close(); };
+  cancel.onclick = close;
+}
+
+/* ============================================================
+   COPY
+   ============================================================ */
+function copyText(txt, msg){
+  const done = () => toast(msg || 'Đã copy', 'success');
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(() => fallbackCopy(txt, msg));
+  } else fallbackCopy(txt, msg);
+}
+function fallbackCopy(txt, msg){
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast(msg || 'Đã copy', 'success'); }
+  catch { toast('Copy thất bại', 'error'); }
+  document.body.removeChild(ta);
+}
+
+/* ============================================================
+   TAB SWITCH
+   ============================================================ */
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  ['home', 'profile', 'activity', 'settings'].forEach(p => {
+    $('panel' + p.charAt(0).toUpperCase() + p.slice(1))?.classList.toggle('active', p === name);
+  });
+  // fallback IDs
+  $('homePanel').classList.toggle('active', name === 'home');
+  $('profilePanel').classList.toggle('active', name === 'profile');
+  $('activityPanel').classList.toggle('active', name === 'activity');
+  $('settingsPanel').classList.toggle('active', name === 'settings');
+}
+
+/* ============================================================
+   BIND
+   ============================================================ */
+function bindEvents(){
+  $('activateBtn').addEventListener('click', activate);
+  $('keyInput').addEventListener('keydown', e => { if (e.key === 'Enter') activate(); });
+
+  document.querySelectorAll('.game-card').forEach(c => {
+    c.addEventListener('click', () => selectGame(c.dataset.game));
+  });
+  document.querySelectorAll('[data-feat-input]').forEach(inp => {
+    inp.addEventListener('change', () => onFeatureChange(inp.dataset.featInput, inp.checked));
+  });
+  $('enterGameBtn').addEventListener('click', enterGame);
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+
+  $('logoutBtn').addEventListener('click', () => {
+    showModal({
+      title: 'Đăng xuất',
+      desc: 'Key vẫn giữ khoá trên thiết bị này. Bạn có thể đăng nhập lại bằng key cũ.',
+      okText: 'Đăng xuất',
+      onOk: logout
+    });
+  });
+
+  $('clearCacheBtn').addEventListener('click', () => {
+    // Xoá cache session cũ nhưng giữ device id
+    try {
+      // chỉ remove key cũ khác phiên bản
+      ['hldd_cache_v2', 'hldd_session_v3'].forEach(k => localStorage.removeItem(k));
+    } catch {}
+    toast('Đã làm mới cache', 'success');
+    addLog('Xoá cache dữ liệu cũ', 'info');
+  });
+
+  $('testPingBtn').addEventListener('click', async () => {
+    toast('Đang test...', 'info');
+    const r = await pingServer();
+    if (r.online) toast(`Ping ${r.ms} ms · Online`, 'success');
+    else toast('Server offline', 'error');
+  });
+
+  $('resetAllBtn').addEventListener('click', () => {
+    showModal({
+      title: 'Xoá toàn bộ dữ liệu',
+      desc: 'Sẽ xoá phiên đăng nhập, device ID và log. Key đã khoá vẫn còn trên server — bạn cần liên hệ admin để mở khoá.',
+      okText: 'Xoá hết',
+      onOk: resetAll
+    });
+  });
+
+  ['loginLogo', 'mainLogo', 'profileLogo'].forEach(id => {
+    const el = $(id);
+    if (el) el.addEventListener('error', () => { el.style.display = 'none'; });
+  });
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+bindEvents();
+tryRestore();
+</script>
+</body>
+</html>
